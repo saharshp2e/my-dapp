@@ -1,0 +1,39 @@
+.admin-flow-page {
+    background-color: #000;
+    padding: 20px;
+    border-radius: 20px;
+  }
+  
+  .admin-flow-container {
+    background-color: #ffcc00;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+  }
+  
+  .input-field {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 30px;
+    border: none;
+    width: 80%;
+  }
+  
+  .whitelist-button, .blacklist-button {
+    background-color: #00f;
+    color: #fff;
+    padding: 15px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 80%;
+    margin-bottom: 10px;
+  }
+  
+  .total-supply {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }

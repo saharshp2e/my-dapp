@@ -1,3 +1,28 @@
+
+<!-- Ensure kalp wallet dapp package is in the same directory as the dapp
+
+inside kalp wallet dapp package do npm link to publish the custom extension to npm
+
+npm install kalp-wallet-dapp-pkg
+
+when the package is published to npm or a private registry:
+install the package using :
+npm install kalp-wallet-dapp-pkg
+
+
+Or add it directly to your package.json:
+"dependencies": {
+  "kalp-wallet-dapp-pkg": "^1.0.0",
+  // other dependencies
+}
+
+
+Reinstall Dependencies:
+npm install
+
+ -->
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

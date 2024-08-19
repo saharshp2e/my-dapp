@@ -1,0 +1,57 @@
+.address-book-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: black;
+    padding: 20px;
+    border-radius: 20px;
+    width: 400px;
+  }
+  
+  .search-bar {
+    width: 100%;
+    padding: 15px;
+    border-radius: 25px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-align: center;
+    outline: none;
+  }
+  
+  .address-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .address-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: yellow;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .address {
+    font-size: 1rem;
+    color: black;
+  }
+  
+  .copy-button {
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+  
+  .copy-button:hover {
+    background-color: #00bfff;
+  }
+  
