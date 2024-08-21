@@ -14,6 +14,9 @@ import Mint from './components/Mint';
 import OnBoardMerchant from './components/OnBoardMerchant';
 import AccessList from './components/AccessList';
 import Send from './components/Send';
+import Init from './components/Init';
+import ScanQR from './components/ScanQr';
+import GetBalance from './components/GetBalance';
 
 const App = () => {
   var dappToken = "";
@@ -30,7 +33,7 @@ const App = () => {
   const handleBurn = () => {
     setTotalSupply(totalSupply - amount);
     const channelName = "kalp";
-    const chainCodeName = "CBDC2";
+    const chainCodeName = "CBDC4";
     const transactionName = "Burn";
 
     const transactionParams = [
@@ -40,16 +43,26 @@ const App = () => {
     ExecuteSubmitTransaction(channelName, chainCodeName, transactionName, transactionParams);
   }
 
+  // const handleAdminClick = () => {
+  //   const channelName = "kalp";
+  //   const chainCodeName = "CBDC4";
+  //   const transactionName = "Initialize";
+  //   //const assetValue = "Assetgaurav5080";
+  //   const transactionParams = [
+  //     "CBDC", "CBDC$", "67595a0d2cfad599fa82f337c88a7ef07c92e4eb"
+  //   ];
+  //   ExecuteSubmitTransaction(channelName, chainCodeName, transactionName, transactionParams);
+  // }
+
   const handleAdminClick = () => {
-    const channelName = "kalp";
-    const chainCodeName = "CBDC2";
-    const transactionName = "Initialize";
-    //const assetValue = "Assetgaurav5080";
-    const transactionParams = [
-      "CBDC", "CBDC$", "67595a0d2cfad599fa82f337c88a7ef07c92e4eb"
-    ];
-    ExecuteSubmitTransaction(channelName, chainCodeName, transactionName, transactionParams);
-  }
+    setSelectedPage("admin");
+    setActiveTab("onboardMerchant"); // Default tab for the admin page
+  };
+
+  const handleVendorClick = () => {
+    setSelectedPage("vendor");
+    setActiveTab("qr"); // Default tab for the vendor page
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -57,16 +70,9 @@ const App = () => {
         return (
           <div className="admin-flow-page">
             <div className="admin-flow-container">
-              <div className="total-supply">Total Supply: {totalSupply}</div>
+              {/* <div className="total-supply">Total Supply: {totalSupply}</div> */}
               
               <div className="input-container">
-                {/* <input
-                  className="input-field"
-                  type="text"
-                  placeholder="CBDC"
-                  value={cbdc}
-                  onChange={(e) => setCBDC(e.target.value)}
-                /> */}
                 <label>
                   CBDC
                 </label>
@@ -77,21 +83,18 @@ const App = () => {
                   value={receiverAddress}
                   onChange={(e) => setReceiverAddress(e.target.value)}
                 />
-                <input
-                  className="input-field"
-                  type="number"
-                  placeholder="Amount"
-                  value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value))}
-                />
               </div>
 
               <button className="burn-button" onClick={handleBurn}>
                 Burn
               </button>
               
-              <div className="total-supply-after-burn">
+              {/* <div className="total-supply-after-burn">
                 Total Supply after burn: {totalSupply - amount}
+              </div> */}
+              <div className="transaction-messages">
+                {responseMessage && <p>{responseMessage}</p>}
+                {/* {responseReadMessage && <h1>{responseReadMessage}</h1>} */}
               </div>
             </div>
           </div>
@@ -106,8 +109,12 @@ const App = () => {
         return <AccessList />;
       case "send":
         return <Send />;
-      // case "qr":
-      //   return <Qr />
+      case "Init":
+        return <Init />
+      case "qr":
+        return <ScanQR />
+      case "getBalance":
+        return <GetBalance />
       default:
         return null;
     }
@@ -129,12 +136,9 @@ const App = () => {
       </div>
       <div className="main-screen-container">
             <button onClick={handleAdminClick} className="admin-button">
-              Make Yourself Admin
-            </button>
-            <button onClick={() => setSelectedPage("admin")} className="admin-button">
               Admin Page
             </button>
-            <button onClick={() => setSelectedPage("vendor")} className="vendor-button">
+            <button onClick={handleVendorClick} className="vendor-button">
               Vendor Page
             </button>
       </div>
@@ -187,10 +191,52 @@ const App = () => {
         transactionParams
       );
       setResponseMessage(`Transaction successful: ${JSON.stringify(res)}`);
+      {responseMessage && <p>{responseMessage}</p>}
+      {responseReadMessage && (
+        <h1>Read Transaction Output: {responseReadMessage}</h1>
+      )}
+      // console.log('response message: ', responseMessage)
     } catch (error) {
       console.log(`error is :${error}`);
     }
   };
+
+  // const ExecuteReadTransaction = async (
+  //   channelName,
+  //   chaincodeName,
+  //   transactionName,
+  //   transactionParams
+  // ) => {
+  //   try {
+  //     //const resp: boolean = await connectToWallet(dappToken, "OPENSEA");
+  //     const enrollmentId = localStorage.getItem("opensea_enrollmentId");
+  //     dappToken = localStorage.getItem("opensea_dappToken") || "";
+
+  //     transactionParams = ["Assetgaurav60444", "ASSET-MYIPR"];
+  //     if (!dappToken) {
+  //       console.log("Error: no dappToken exists");
+  //       throw new Error("Error: no dappToken exists");
+  //     }
+
+  //     var readTransactionPromise = await readTransactionFromWallet(
+  //       dappToken,
+  //       "OPENSEA",
+  //       "http://localhost:3000/favicon.ico", "http://localhost:3000",
+  //       channelName,
+  //       chaincodeName,
+  //       transactionName,
+  //       transactionParams
+  //     );
+  //     console.log(`readTransactionPromise is:${readTransactionPromise}`);
+
+  //     setresponseReadMessage(
+  //       `Read Transaction successful: ${JSON.stringify(readTransactionPromise)}`
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
 
   const ExecuteReadTransaction = async (
     channelName,
@@ -202,13 +248,14 @@ const App = () => {
       //const resp: boolean = await connectToWallet(dappToken, "OPENSEA");
       const enrollmentId = localStorage.getItem("opensea_enrollmentId");
       dappToken = localStorage.getItem("opensea_dappToken") || "";
-
-      transactionParams = ["Assetgaurav60444", "ASSET-MYIPR"];
+  
+      transactionParams = [`${receiverAddress}"`];
       if (!dappToken) {
         console.log("Error: no dappToken exists");
         throw new Error("Error: no dappToken exists");
       }
-
+  
+      console.log("hebhr")
       var readTransactionPromise = await readTransactionFromWallet(
         dappToken,
         "OPENSEA",
@@ -219,7 +266,7 @@ const App = () => {
         transactionParams
       );
       console.log(`readTransactionPromise is:${readTransactionPromise}`);
-
+      console.log('balance Amount: ', readTransactionPromise)
       setresponseReadMessage(
         `Read Transaction successful: ${JSON.stringify(readTransactionPromise)}`
       );
@@ -227,6 +274,7 @@ const App = () => {
       console.log(error);
     }
   };
+
 
   return (
     // <div>
@@ -268,9 +316,14 @@ const App = () => {
                   <li className={activeTab === "address book" ? "active" : ""} onClick={() => setActiveTab("address book")}>Address Book</li>
                   {/* <li className={activeTab === "burn" ? "active" : ""} onClick={() => setActiveTab("burn")}>Burn</li>
                   <li className={activeTab === "mint" ? "active" : ""} onClick={() => setActiveTab("mint")}>Mint</li> */}
-                  <li className={activeTab === "onboardMerchant" ? "active" : ""} onClick={() => setActiveTab("onboardMerchant")}>Onboard Merchant</li>
+                  <li className={activeTab === "onboardMerchant" ? "active" : ""} onClick={() => setActiveTab("onboardMerchant")}>Whiteliste User</li>
                   {/* <li className={activeTab === "access list" ? "active" : ""} onClick={() => setActiveTab("access list")}>Access List</li> */}
+                  <li className={activeTab === "mint" ? "active" : ""} onClick={() => setActiveTab("mint")}>Mint</li>
+                  {/* <li className={activeTab === "init" ? "active" : ""} onClick={() => setActiveTab("init")}>Init</li> */}
+                  <li className={activeTab === "burn" ? "active" : ""} onClick={() => setActiveTab("burn")}>Burn</li>
                   <li className={activeTab === "send" ? "active" : ""} onClick={() => setActiveTab("send")}>Send</li>
+                  <li className={activeTab === "getBalance" ? "active" : ""} onClick={() => setActiveTab("getBalance")}>Balance</li>
+
                 </ul>
               </nav>
               <div className="content-area">
@@ -282,18 +335,22 @@ const App = () => {
               <nav className="navbar">
                 <ul>
                   {/* <li className={activeTab === "address book" ? "active" : ""} onClick={() => setActiveTab("address book")}>Address Book</li> */}
-                  <li className={activeTab === "burn" ? "active" : ""} onClick={() => setActiveTab("burn")}>Burn</li>
-                  <li className={activeTab === "mint" ? "active" : ""} onClick={() => setActiveTab("mint")}>Mint</li>
+                  {/* <li className={activeTab === "burn" ? "active" : ""} onClick={() => setActiveTab("burn")}>Burn</li>
+                  <li className={activeTab === "mint" ? "active" : ""} onClick={() => setActiveTab("mint")}>Mint</li> */}
                   {/* <li className={activeTab === "onboardMerchant" ? "active" : ""} onClick={() => setActiveTab("onboardMerchant")}>Onboard Merchant</li> */}
                   {/* <li className={activeTab === "access list" ? "active" : ""} onClick={() => setActiveTab("access list")}>Access List</li> */}
-                  <li className={activeTab === "send" ? "active" : ""} onClick={() => setActiveTab("send")}>Send</li>
-                  {/* <li className={activeTab === "send" ? "active" : ""} onClick={() => setActiveTab("send")}>QR</li> */}
+                  {/* <li className={activeTab === "send" ? "active" : ""} onClick={() => setActiveTab("send")}>Send</li> */}
+                  <li className={activeTab === "qr" ? "active" : ""} onClick={() => setActiveTab("qr")}>QR</li>
                 </ul>
               </nav>
               <div className="content-area">
                 {renderContent()}
+
               </div>
+
             </div>
+            
+
           )}
         </div>
   );

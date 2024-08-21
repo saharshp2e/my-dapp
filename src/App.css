@@ -17,9 +17,14 @@
 /* Responsive container */
 .admin-flow-page {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+
+.transaction-messages > p, .transaction-messages > h1 {
+  color: white;
 }
 
 .admin-flow-container {
@@ -208,3 +213,58 @@
 .vendor-button:active {
   transform: scale(0.98);
 }
+
+
+/* App.css */
+.init-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.init-button:hover {
+  background-color: #45a049;
+}
+
+.init-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.qr-code-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  transform: translateX(10px);
+}
+
+.admin-flow-container {
+  position: relative;
+  max-width: 600px; /* Set a maximum width to control the layout */
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.response-message {
+  word-wrap: break-word; /* Ensures long words or URLs break to the next line */
+  max-width: 100%; /* Ensures the response message stays within the container */
+  background-color: #eef; /* A light background to highlight the message */
+  border: 1px solid #ccd; /* Slight border to distinguish it */
+  padding: 10px;
+  margin-top: 10px; /* Adds spacing between the message and other elements */
+  border-radius: 5px;
+}
+
+
+
+
+
+
+

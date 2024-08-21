@@ -16,19 +16,30 @@ const Mint = () => {
   const [totalSupply, setTotalSupply] = useState(234);
   const [cbdc, setCBDC] = useState('');
   const [receiverAddress, setReceiverAddress] = useState('');
-  const [amount, setAmount] = useState(123);
+  const [amount, setAmount] = useState();
   const [isConnected, setIsConnected] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
   const [responseReadMessage, setresponseReadMessage] = useState("");
 
+  const generateRandomString = (length) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
+
   const handleMint = () => {
+    const randomTxnId = generateRandomString(6);
     // Mint logic goes here
     setTotalSupply(totalSupply + amount);
     const channelName = "kalp";
-    const chainCodeName = "CBDC2";
+    const chainCodeName = "CBDC4";
     const transactionName = "Mint";
     const transactionParams = [
-      `{\"OnrampTxnId\":\"T004\",\"Desc\":\"First minting\",\"Amount\":5}`
+      `{\"OnrampTxnId\":\"${randomTxnId}\",\"Desc\":\"First minting\",\"Amount\":${amount}}`
     ];
 
     ExecuteSubmitTransaction(channelName, chainCodeName, transactionName, transactionParams);
@@ -76,12 +87,53 @@ const Mint = () => {
         transactionParams
       );
       setResponseMessage(`Transaction successful: ${JSON.stringify(res)}`);
+      {responseMessage && <p>{responseMessage}</p>}
+      {responseReadMessage && (
+        <h1>Read Transaction Output: {responseReadMessage}</h1>
+      )}
       console.log('here is response: ', setResponseMessage)
     } catch (error) {
       console.log(`error is :${error}`);
     }
   };
   
+  // const ExecuteReadTransaction = async (
+  //   channelName,
+  //   chaincodeName,
+  //   transactionName,
+  //   transactionParams
+  // ) => {
+  //   try {
+  //     //const resp: boolean = await connectToWallet(dappToken, "OPENSEA");
+  //     const enrollmentId = localStorage.getItem("opensea_enrollmentId");
+  //     dappToken = localStorage.getItem("opensea_dappToken") || "";
+  
+  //     transactionParams = ["Assetgaurav60442", "ASSET-MYIPR"];
+  //     if (!dappToken) {
+  //       console.log("Error: no dappToken exists");
+  //       throw new Error("Error: no dappToken exists");
+  //     }
+  
+  //     console.log("hebhr")
+  //     var readTransactionPromise = await readTransactionFromWallet(
+  //       dappToken,
+  //       "OPENSEA",
+  //       "http://localhost:3000/favicon.ico", "http://localhost:3000",
+  //       channelName,
+  //       chaincodeName,
+  //       transactionName,
+  //       transactionParams
+  //     );
+  //     console.log(`readTransactionPromise is:${readTransactionPromise}`);
+  
+  //     setresponseReadMessage(
+  //       `Read Transaction successful: ${JSON.stringify(readTransactionPromise)}`
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const ExecuteReadTransaction = async (
     channelName,
     chaincodeName,
@@ -93,7 +145,7 @@ const Mint = () => {
       const enrollmentId = localStorage.getItem("opensea_enrollmentId");
       dappToken = localStorage.getItem("opensea_dappToken") || "";
   
-      transactionParams = ["Assetgaurav60442", "ASSET-MYIPR"];
+      transactionParams = [`${receiverAddress}"`];
       if (!dappToken) {
         console.log("Error: no dappToken exists");
         throw new Error("Error: no dappToken exists");
@@ -110,7 +162,7 @@ const Mint = () => {
         transactionParams
       );
       console.log(`readTransactionPromise is:${readTransactionPromise}`);
-  
+      console.log('balance Amount: ', readTransactionPromise)
       setresponseReadMessage(
         `Read Transaction successful: ${JSON.stringify(readTransactionPromise)}`
       );
@@ -119,11 +171,10 @@ const Mint = () => {
     }
   };
 
-
   return (
     <div className="admin-flow-page content-area">
       <div className="admin-flow-container">
-        <div className="total-supply">Total Supply: {totalSupply}</div>
+        {/* <div className="total-supply">Total Supply: {totalSupply}</div> */}
 
         <div className="input-container">
           {/* <input
@@ -134,15 +185,15 @@ const Mint = () => {
             onChange={(e) => setCBDC(e.target.value)}
           /> */}
           <label>
-            CDBC
+            CBDC
           </label>
-          <input
+          {/* <input
             className="input-field"
             type="text"
             placeholder="Receiver Address"
             value={receiverAddress}
             onChange={(e) => setReceiverAddress(e.target.value)}
-          />
+          /> */}
           <input
             className="input-field"
             type="number"
@@ -156,9 +207,13 @@ const Mint = () => {
           Mint
         </button>
         
-        <div className="total-supply-after-mint">
+        {/* <div className="total-supply-after-mint">
           Total Supply after mint: {totalSupply + amount}
-        </div>
+        </div> */}
+        <div className="transaction-messages">
+        {responseMessage && <p>{responseMessage}</p>}
+        {/* {responseReadMessage && <h1>{responseReadMessage}</h1>} */}
+      </div>
       </div>
     </div>
   );

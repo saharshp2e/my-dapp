@@ -18,10 +18,11 @@ const OnBoardMerchant = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
   const [responseReadMessage, setresponseReadMessage] = useState("");
+  const [extractedMessage, setExtractedMessage] = useState("");
 
   const handleWhitelist = () => {
     const channelName = "kalp";
-    const chainCodeName = "CBDC2";
+    const chainCodeName = "CBDC4";
     const transactionName = "WhitelistUser";
     const transactionParams = [
       `{"User":"${merchantId}","Role":"USER","Desc":"user"}`
@@ -30,13 +31,33 @@ const OnBoardMerchant = () => {
     ExecuteSubmitTransaction(channelName, chainCodeName, transactionName, transactionParams);
   };
 
+  const handleInitClick = () => {
+    console.log("Init button clicked");
+    transactionParams = ["CBDC", "CBDC$", "98358b38d04f94b41684f757d7dc53c8aa84b48c"]
+    const channelName = "kalp";
+    const chainCodeName = "CBDC4";
+    const transactionName = "Initialise";
+    const transactionParams = [
+      // `{"User":"${merchantId}","Role":"USER","Desc":"user"}`
+
+      
+    ];
+
+    ExecuteSubmitTransaction(channelName, chainCodeName, transactionName, transactionParams);
+    // Perform any additional logic or initialization here
+  };
+
+  
+  
+
+
 
   const handleBlacklist = () => {
     const channelName = "kalp";
-    const chainCodeName = "CBDC2";
+    const chainCodeName = "CBDC4";
     const transactionName = "RemoveWhitelisting";
     const transactionParams = [
-      `{"${merchantId}"}`
+      `${merchantId}`
     ];
 
     ExecuteSubmitTransaction(channelName, chainCodeName, transactionName, transactionParams);
@@ -84,7 +105,15 @@ const OnBoardMerchant = () => {
         transactionParams
       );
       setResponseMessage(`Transaction successful: ${JSON.stringify(res)}`);
-      console.log('here is response: ', setResponseMessage)
+      {responseMessage && <p>{responseMessage}</p>}
+      // const message = extractMessage(res);
+      // setExtractedMessage(message);
+      // {responseReadMessage && (
+      //   <h1>Read Transaction Output: {responseReadMessage}</h1>
+      // )}
+      // const message = extractMessage(`Transaction successful: ${JSON.stringify(res)}`);
+      // setExtractedMessage(message);
+      // console.log('message: ', message)
     } catch (error) {
       console.log(`error is :${error}`);
     }
@@ -132,17 +161,17 @@ const OnBoardMerchant = () => {
   return (
     <div className="admin-flow-page content-area">
       <div className="admin-flow-container">
-        <div className="total-supply">Total Supply: 234</div>
         <label>CBDC</label>
         {/* <input
           className="input-field"
           type="text"
           placeholder="CBDC"
         /> */}
+
         <input
           className="input-field"
           type="text"
-          placeholder="Enter Merchant id"
+          placeholder="Enter User's ID"
           value={merchantId}
           onChange={(e) => setMerchantId(e.target.value)}
         />
@@ -159,11 +188,15 @@ const OnBoardMerchant = () => {
         <button className="blacklist-button" onClick={handleBlacklist}>
           Blacklist
         </button>
+        {/* <button className="blacklist-button" onClick={handleInitClick}>
+          Initialise User
+        </button> */}
         {responseMessage && (
           <div className="response-message">
             {responseMessage}
           </div>
         )}
+                
       </div>
     </div>
   );
