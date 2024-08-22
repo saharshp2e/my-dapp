@@ -70,13 +70,6 @@ const Send = () => {
       // `{\"Receiver\":\'ebcb2f58c3f034486e75159b6c6bf42c039be539\',\"Amount\":50}`,
     ];
     console.log('transfer token amount : ', transactionParams)
-    if (amount > accountBalance) {
-      console.log('Insufficient balance');
-      return;
-    }
-    
-    // const capital = await getBalance()
-    // setCapital(capital)
     await ExecuteSubmitTransaction(channelName, chainCodeName, transactionName, transactionParams);
     
 
