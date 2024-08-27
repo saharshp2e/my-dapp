@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import {
   getToken,
   connectToWallet,
-  getEnrollmentIdFromWallet,
-  writeTransactionFromWallet,
-  reEngageEvents,
-  readTransactionFromWallet,
-  disconnectWallet,
 } from "kalp-wallet-dapp-pkg";
 import './App.css'
 import AddressBook from './components/AddressBook';
@@ -21,10 +16,7 @@ import Burn from './components/Burn';
 
 const App = () => {
   var dappToken = "";
-  const [responseMessage, setResponseMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false); // Add connected state
-  const [responseReadMessage, setresponseReadMessage] = useState("");
-  const [receiverAddress, setReceiverAddress] = useState("");
   const [activeTab, setActiveTab] = useState("burn");
   const [selectedPage, setSelectedPage] = useState("");
 
@@ -37,6 +29,11 @@ const App = () => {
   const handleVendorClick = () => {
     setSelectedPage("vendor");
     setActiveTab("qr"); // Default tab for the vendor page
+  };
+
+  const handleUserClick = () => {
+    setSelectedPage("user");
+    setActiveTab("getBalance"); // Default tab for the vendor page
   };
 
   const renderContent = () => {
@@ -59,6 +56,8 @@ const App = () => {
         return <ScanQR />
       case "getBalance":
         return <GetBalance />
+        case "user":
+          return <GetBalance />
       default:
         return null;
     }
@@ -66,20 +65,23 @@ const App = () => {
 
   const renderMainScreen = () => (
     <>
-      <div className="connect-button">
+      {/* <div className="connect-button">
         <button className='admin-button' onClick={connectToWalletFromDapp}>Connect to Wallet</button>
         <p>Status: {isConnected ? "Connected" : "Not Connected"}</p>
       {responseMessage && <p>{responseMessage}</p>}
       {responseReadMessage && (
         <h1>Read Transaction Output: {responseReadMessage}</h1>
       )}
-      </div>
+      </div> */}
       <div className="main-screen-container">
             <button onClick={handleAdminClick} className="admin-button">
               Admin Page
             </button>
             <button onClick={handleVendorClick} className="vendor-button">
               Vendor Page
+            </button>
+            <button onClick={handleUserClick} className="vendor-button">
+              User Page
             </button>
       </div>
     </>
@@ -126,8 +128,14 @@ const App = () => {
                   <li className={activeTab === "getBalance" ? "active" : ""} onClick={() => setActiveTab("getBalance")}>Balance</li>
                 </>
               )}
-              {selectedPage === "vendor" && (
+              {/* {selectedPage === "vendor" && (
                 <li className={activeTab === "qr" ? "active" : ""} onClick={() => setActiveTab("qr")}>QR</li>
+              )} */}  {/*Uncomment when wallet bug has been resolved */}
+               {selectedPage === "vendor" && (
+                <li className={activeTab === "send" ? "active" : "active"} onClick={() => setActiveTab("send")}>Send</li>
+              )}
+              {selectedPage === "user" && (
+                <li className={activeTab === "user" ? "active" : "active"} onClick={() => setActiveTab("user")}>Balance</li>
               )}
             </ul>
           </nav>

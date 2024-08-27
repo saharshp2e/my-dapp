@@ -21,7 +21,7 @@ const Init = () => {
   const handleInitClick = () => {
     console.log("Init button clicked");
     const channelName = "kalp";
-    const chainCodeName = "CBDC4";
+    const chainCodeName = "CBDC5";
     const transactionName = "Initialise";
     const transactionParams = [
       // `{"User":"${merchantId}","Role":"USER","Desc":"user"}`
@@ -152,7 +152,7 @@ const Init = () => {
         onClick={() =>
           ExecuteSubmitTransaction(
             "kalp",
-            "CBDC4",
+            "CBDC5",
             "Initialize",
             transactionParams
           )
